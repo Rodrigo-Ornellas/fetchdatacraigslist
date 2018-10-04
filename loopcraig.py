@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from craigscrap import Getcraig
+from getcraig import Getcraig
 import requests
 from bs4 import BeautifulSoup
 
