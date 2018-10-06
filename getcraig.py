@@ -6,6 +6,8 @@ import requests
 from bs4 import BeautifulSoup
 # import json
 # import sys
+from collections import namedtuple
+import csv
 
 class Getcraig:
 
@@ -16,16 +18,15 @@ class Getcraig:
 
 
     def __str__(self):
-         # return "Ad('{} - {} - {}')".format(self.title, self.pid, self.url)
-        # print ("1) Date: " + self.avdate)
-        # print ("2) Details: " + str(self.details))
-        # print ("3) " + self.pid)
-        # print ("4) Price: " + str(self.price))
-        # print ("5) Google Maps: " + str(self.mapurl))
-        # print ("6) Housing: " + str(self.housing))
-        # print ("7) Title: " + str(self.title))
-        # print ("8) Lat & Long: " + self.geometry)
         return '============ Ad #{} ============== \n1) Move in date: {} \n2) Details: {} \n3) Pid: {} \n4) Price: {} \n5) Google Maps: {} \n6) Housing: {} \n7) Title: {} \n8) Lat & Long: {} \n9) Apartment size: {}'.format(str(Getcraig.num_of_ads), self.avdate, str(self.details), self.pid, str(self.price), str(self.mapurl), str(self.housing), str(self.title), self.geometry(), self.aptsize())
+
+
+    def export(self):
+        my_dict = self.__dict__
+        with open('craigs.csv', 'w') as f:
+            w = csv.DictWriter(f, my_dict.keys())
+            w.writeheader()
+            w.writerow(my_dict)
 
 
 
@@ -84,7 +85,6 @@ class Getcraig:
 
             self.details = det
 
-
             # =============================================
             # 3) var pID  or  <p class="postinginfo">post id:
             try:
@@ -140,3 +140,5 @@ class Getcraig:
                 self.lng = dish.find("div", {"id": "map"})["data-longitude"]
             except:
                 pass
+
+            # =============================================

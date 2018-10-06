@@ -20,11 +20,7 @@ adCollection = range(len(urlCollection))
 # print (len(urlCollection))
 
 for i in range(len(urlCollection)):
-    # print i
     u = urlCollection[i].attrs['href']
     # print u
-    # print (urlCollection[i].attrs['href'])
-    adCollection[i] = u
-    # print (adCollection)
     adCollection[i] = Getcraig(u)
     print (adCollection[i])
