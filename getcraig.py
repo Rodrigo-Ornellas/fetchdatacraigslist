@@ -8,23 +8,30 @@ import csv
 import sys
 
 class Getcraig:
-    ''' Getcraig is a simple script that takes an URL from Craigslist as a
-    unique parameter. Visit the HOUSING section of Craigslist. Configure the search on Craigslist page to display you the list ads of apartments and houses available for rentself.
-
-    Once you see the list of apartments you can copy this URL as INPUT for this SCRIPT!
+    '''
+    ==========================================
+    >> Getcraig >
+        ** is a script that takes an URL from Craigslist as a unique parameter:
+        -------------------
+        1) To get the URL, visit the HOUSING section of Craigslist.
+        2) Please define the search parameter on Craigslist's page.
+        This search should display the list of ads of apartments available for rent.
+        3) Once the list is presented, you can COPY the url as INPUT for Getcraig SCRIPT!
     '''
 
-    num_of_ads = 0
+    # num_of_ads = 0
+
 
     def __repr__(self):
         return "AdUrl('{}')".format(self.url)
 
 
     def __str__(self):
-        return '============ Ad #{} ============== \n1) Move in date: {} \n2) Details: {} \n3) Pid: {} \n4) Price: {} \n5) Google Maps: {} \n6) Ad URL: {} \n7) Title: {} \n8) Lat & Long: {} \n9) Apartment size: {}'.format(str(Getcraig.num_of_ads), self.avdate, str(self.details), self.pid, str(self.price), str(self.mapurl), self.url, str(self.title), self.geometry(), self.aptsize())
+        return '============ Ad #{} ============== \n1) Move-in date: {} \n2) Details: {} \n3) Apartment size: {} \n4) Price: {} \n5) Google Maps: {} \n6) Ad URL: {} \n7) Title: {} \n8) Lat & Long: {}'.format(self.pid, self.avdate, str(self.details), self.__aptsize(), str(self.price), str(self.mapurl), self.url, str(self.title), self.__geometry())
 
 
     def export(self):
+        ''' This will export this unique rental AD information to a CSV file called craig.csv'''
         my_dict = self.__dict__
         with open('craigs.csv', 'w') as f:
             w = csv.DictWriter(f, my_dict.keys())
@@ -32,13 +39,15 @@ class Getcraig:
             w.writerow(my_dict)
 
 
-    def geometry(self):
+    def __geometry(self):
+        ''' This returns one text string with Latitude and Longitude'''
         # to call this method there are 2 forms
         # a) instance-name.geometry()  >> access the method through instance
         # b) GetAd.geomentry(instance-name)  >> or access the method through class
         return '{},{}'.format(self.lat, self.lng)
 
-    def aptsize(self):
+    def __aptsize(self):
+        ''' This gets the apartment size in square feet and translate to squared meter if exists'''
         dim = self.details.split('/')
         for i in dim:
             try:
@@ -66,7 +75,7 @@ class Getcraig:
             self.title = ""      #7
             self.lat = ""        #8
             self.lng = ""        #8
-            Getcraig.num_of_ads += 1
+            # Getcraig.num_of_ads += 1
 
             # =============================================
             # V) Validate the URL as being part of Craigslist
@@ -92,7 +101,7 @@ class Getcraig:
                 #     print (z)
             except:
                 # sys.exit("Sorry! URL is not from a valid Rental Advertizement Page. Please start again!")
-                print ("3) did not work: PID")
+                # print ("3) did not work: PID")
                 # sys.exit("Sorry! URL is not from a valid Rental Advertizement Page. Please start again!")
                 pass
 
@@ -101,7 +110,7 @@ class Getcraig:
             try:
                 self.avdate = dish.find("span", {"class": "housing_movein_now property_date shared-line-bubble", "data-date": True})["data-date"]
             except:
-                print ("1) did not work: DATE")
+                # print ("1) did not work: DATE")
                 pass
             # =============================================
             # 2) Details of Unit = class="attrgroup"
@@ -117,7 +126,7 @@ class Getcraig:
                 self.details = det
 
             except:
-                print ("2) did not work: DETAILS")
+                # print ("2) did not work: DETAILS")
                 pass
 
 
@@ -129,7 +138,7 @@ class Getcraig:
                 for price in scrap:
                     self.price = price
             except:
-                print ("4) did not work: PRICE")
+                # print ("4) did not work: PRICE")
                 pass
 
             # =============================================
@@ -137,7 +146,7 @@ class Getcraig:
             try:
                 self.mapurl = dish.find("p", {"class": "mapaddress"}).find('a')['href']
             except:
-                print ("5) did not work: MAPS")
+                # print ("5) did not work: MAPS")
                 pass
 
             # =============================================
