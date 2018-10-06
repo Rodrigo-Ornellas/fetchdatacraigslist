@@ -7,8 +7,8 @@ CraigsList is a site used to create ads to sell, buy, exchange or rent your pers
 URL: https://www.craigslist.org/about/sites
 
 ### DETAILS >
-I had a special need to search for an apartment to rent. And I wanted to be able to grab the data to filter and analyse on an MS Excel file.
-So I created the script to be able to grab this data
+I had a special need to search for an apartment to rent. And I wanted to be able to grab the data to filter and analyse on an MS Excel file. So I created the script to be able to grab this data.
+This is a local script to run on your computer.
 
 ### ** WARNING **
 All my development and tests were made on static HTML files on my local drive to avoid any overload of requests to CraigList servers.
