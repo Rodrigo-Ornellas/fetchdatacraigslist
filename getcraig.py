@@ -1,15 +1,18 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import requests
-# import re
-from bs4 import BeautifulSoup
-# import json
-# import sys
 from collections import namedtuple
+from bs4 import BeautifulSoup
+import requests
 import csv
+import sys
 
 class Getcraig:
+    ''' Getcraig is a simple script that takes an URL from Craigslist as a
+    unique parameter. Visit the HOUSING section of Craigslist. Configure the search on Craigslist page to display you the list ads of apartments and houses available for rentself.
+
+    Once you see the list of apartments you can copy this URL as INPUT for this SCRIPT!
+    '''
 
     num_of_ads = 0
 
@@ -18,7 +21,7 @@ class Getcraig:
 
 
     def __str__(self):
-        return '============ Ad #{} ============== \n1) Move in date: {} \n2) Details: {} \n3) Pid: {} \n4) Price: {} \n5) Google Maps: {} \n6) Housing: {} \n7) Title: {} \n8) Lat & Long: {} \n9) Apartment size: {}'.format(str(Getcraig.num_of_ads), self.avdate, str(self.details), self.pid, str(self.price), str(self.mapurl), str(self.housing), str(self.title), self.geometry(), self.aptsize())
+        return '============ Ad #{} ============== \n1) Move in date: {} \n2) Details: {} \n3) Pid: {} \n4) Price: {} \n5) Google Maps: {} \n6) Ad URL: {} \n7) Title: {} \n8) Lat & Long: {} \n9) Apartment size: {}'.format(str(Getcraig.num_of_ads), self.avdate, str(self.details), self.pid, str(self.price), str(self.mapurl), self.url, str(self.title), self.geometry(), self.aptsize())
 
 
     def export(self):
@@ -64,25 +67,20 @@ class Getcraig:
             self.lat = ""        #8
             self.lng = ""        #8
             Getcraig.num_of_ads += 1
+
+            # =============================================
+            # V) Validate the URL as being part of Craigslist
+            valid = 0
+            valid = self.url.find(".craigslist.")
+            # print (valid)
+            if valid == -1:
+                sys.exit("Sorry! URL is not from a valid Rental Advertizement Page. Please start again!")
+
+
+            # =============================================
+            # R) Request the URL after validation
             secpage = requests.get(self.url)
             dish = BeautifulSoup(secpage.content, 'html.parser')
-
-            # =============================================
-            # 1) Avilability Date > data-date="2018-10-01"
-            try:
-                self.avdate = dish.find("span", {"class": "housing_movein_now property_date shared-line-bubble", "data-date": True})["data-date"]
-            except:
-                pass
-            # =============================================
-            # 2) Details of Unit = class="attrgroup"
-            # try:
-            # scrap = dish.findAll("span", {"class": "shared-line-bubble"})
-            scrap = dish.find("p", {"class": "attrgroup"}).select("span b")
-            det = ""
-            for i in range(len(scrap)):
-                det = str(scrap[i].contents[0]) + " / " + str(det)
-
-            self.details = det
 
             # =============================================
             # 3) var pID  or  <p class="postinginfo">post id:
@@ -93,7 +91,36 @@ class Getcraig:
                 # for z in scrap:
                 #     print (z)
             except:
+                # sys.exit("Sorry! URL is not from a valid Rental Advertizement Page. Please start again!")
+                print ("3) did not work: PID")
+                # sys.exit("Sorry! URL is not from a valid Rental Advertizement Page. Please start again!")
                 pass
+
+            # =============================================
+            # 1) Avilability Date > data-date="2018-10-01"
+            try:
+                self.avdate = dish.find("span", {"class": "housing_movein_now property_date shared-line-bubble", "data-date": True})["data-date"]
+            except:
+                print ("1) did not work: DATE")
+                pass
+            # =============================================
+            # 2) Details of Unit = class="attrgroup"
+            # try:
+            # scrap = dish.findAll("span", {"class": "shared-line-bubble"})
+            scrap = 0
+            try:
+                scrap = dish.find("p", {"class": "attrgroup"}).select("span b")
+                det = ""
+                for i in range(len(scrap)):
+                    det = str(scrap[i].contents[0]) + " / " + str(det)
+
+                self.details = det
+
+            except:
+                print ("2) did not work: DETAILS")
+                pass
+
+
             # =============================================
             # 4) Price = class="price"
             scrap = 0
@@ -102,6 +129,7 @@ class Getcraig:
                 for price in scrap:
                     self.price = price
             except:
+                print ("4) did not work: PRICE")
                 pass
 
             # =============================================
@@ -109,17 +137,19 @@ class Getcraig:
             try:
                 self.mapurl = dish.find("p", {"class": "mapaddress"}).find('a')['href']
             except:
+                print ("5) did not work: MAPS")
                 pass
 
             # =============================================
             # 6) House details = class="housing"
-            scrap = 0
-            try:
-                scrap = dish.find("span", {"class": "housing"}).contents
-                for housing in scrap:
-                    self.housing = housing
-            except:
-                pass
+            # scrap = 0
+            # try:
+            #     scrap = dish.find("span", {"class": "housing"}).contents
+            #     for housing in scrap:
+            #         self.housing = housing
+            # except:
+            #     print ("6) did not work: HOUSE")
+            #     pass
 
             # =============================================
             # 7) House details = SPAN / id="titletextonly"

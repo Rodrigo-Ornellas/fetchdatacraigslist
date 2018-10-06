@@ -23,7 +23,8 @@ def exportCSV(obj):
 
 
 mainurl = "https://vancouver.craigslist.ca/search/apa?query=burnaby+metrotown&hasPic=1&search_distance=3&postal=v5h1t7&max_price=1200&max_bedrooms=2&availabilityMode=0&sale_date=all+dates"
-page = requests.get(mainurl)
+main2 = "https://sfbay.craigslist.org/search/apa?hasPic=1&max_price=1200&maxSqft=600&availabilityMode=0&sale_date=all+dates"
+page = requests.get(main2)
 
 # print the response of the HTTP GET
 # print (page.status_code)
