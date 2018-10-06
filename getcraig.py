@@ -29,7 +29,6 @@ class Getcraig:
             w.writerow(my_dict)
 
 
-
     def geometry(self):
         # to call this method there are 2 forms
         # a) instance-name.geometry()  >> access the method through instance
