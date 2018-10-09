@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import requests
 import csv
 import sys
+import json
 
 class Getcraig:
     '''
@@ -30,13 +31,18 @@ class Getcraig:
         return '============ Ad #{} ============== \n1) Move-in date: {} \n2) Details: {} \n3) Apartment size: {} \n4) Price: {} \n5) Google Maps: {} \n6) Ad URL: {} \n7) Title: {} \n8) Lat & Long: {}'.format(self.pid, self.avdate, str(self.details), self.__aptsize(), str(self.price), str(self.mapurl), self.url, str(self.title), self.__geometry())
 
 
-    def export(self):
+    def exportCSV(self):
         ''' This will export this unique rental AD information to a CSV file called craig.csv'''
         my_dict = self.__dict__
         with open('craigs.csv', 'w') as f:
             w = csv.DictWriter(f, my_dict.keys())
             w.writeheader()
             w.writerow(my_dict)
+
+    def exportJSON(self):
+        ''' This will export this unique rental AD information to a JSON variable'''
+        my_dict = self.__dict__
+        return json.dumps(my_dict)
 
 
     def __geometry(self):
